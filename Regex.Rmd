@@ -1,0 +1,52 @@
+---
+title: "Regex"
+author: "Tanner Ashurst"
+date: "03/02/2021"
+output: html_document
+---
+## Part 1
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Make sure to load all necessary libraries before beginning.
+```{r, include = F}
+library(dplyr)
+```
+
+
+To begin, we will import the measurements.csv file into an object titled "MData."
+```{r}
+MData <- read.csv("./measurements.csv")
+print(MData)
+```
+
+Next, we will add a new column called "Sp" which shortens the genus name in the "Organism" column to only the first letter and period.
+```{r}
+MData <- MData %>% mutate(Sp = gsub('^(\\w)\\w+', '\\1.',  MData$Organism))
+print(MData)
+```
+
+Now, we will create a new dataset where the "Sp" column has replaced the "Organism" column.
+```{r}
+NewData <- MData %>% select('Sp', 'Limb.width', 'Limb.length', 'Observer')
+print(NewData)
+```
+
+And now we will save this new dataset as "MeasShort.csv."
+```{r}
+write.csv(NewData, "MeasShort.csv")
+```
+
+## Part 2
+
+We will now write a bash script called MyCount.sh that will loop through a sequence of 20 numbers and for each number it will report the respective number and whether it is a single- or double-digit number.
+
+```{r}
+for Count in {1..20}
+do
+  echo 'This is loop number $Count'
+done
+```
+

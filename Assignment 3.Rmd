@@ -1,0 +1,73 @@
+---
+title: "BIOL 442 Assignment 3"
+author: "Tanner Ashurst"
+date: "26/01/2021"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=F}
+library(dplyr)
+library(knitr)
+```
+
+## Project Info
+Today is Tuesday, January 26th, 2021, and my username is 16tja. Here is a link to my [GitHub repository.](https://github.com/16tja/BIOL-442-Assignment-3.git)
+
+First, we need to import the dataset we'll be working with.
+
+```{r}
+dat <- read.csv("./InputData/FallopiaData.csv")
+kable(dat, caption = 'Summary Table')
+```
+
+Next, we'll filter out any inputs with a total biomass less than 60. Make sure to open the dplyr library for this function.
+
+```{r}
+dat2 <- dat %>% filter(Total > 60)
+kable(dat2, caption = 'Summary Table')
+```
+
+Next, we'll reorder and isolate our columns so we will be left with: 'Total', 'Taxon', 'Scenario', 'Nutrients'.
+
+```{r}
+dat3 <- dat2 %>% select(Total, Taxon, Scenario, Nutrients)
+kable(dat3, caption = 'Summary Table')
+```
+
+Now, we will add a new column which will convert the 'Total' column form milligrams to grams. This column will be named 'TotalG' and will replace the 'Total' column.
+
+```{r}
+dat4 <- dat3 %>% mutate(TotalG = Total/1000) %>% select(TotalG, Taxon, Scenario, Nutrients)
+kable(dat4, caption = 'Summary Table')
+```
+
+The next step will be to create a custom function which will average, sum, and count a specified vector of interest, verbose may be used to select which actions are performed as they are desired.
+
+```{r}
+my.function <- function(var1 = 0, var2 = 0, verbose = T){
+  if (verbose == T){
+  count = length(var1)
+  sum = sum(var2)
+  }
+  if (verbose == F){
+  mean = mean(var1)
+  print(Error)
+  }
+  outlist <- list(Observations = count, Sum = sum)
+  print(outlist)
+}
+```
+
+For our purposes, we will apply our new function to determine the total number of observations within the 'Taxon' column of our latest dataset, as well as summarize the entries of the 'TotalG' column.
+
+```{r}
+my.function(dat4$Taxon, dat4$TotalG, verbose = T)
+```
+
+```{r}
+setwd('./Output')
+write.csv(dat4, file = 'WrangledData.csv')
+```
